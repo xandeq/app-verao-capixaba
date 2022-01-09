@@ -1,0 +1,67 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title> <ion-button [href]="'tabs'" size="small">
+      <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+    </ion-button> Evento: <b>{{evento.nome}}</b> </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large" class="negrito">{{evento.nome}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-row style="text-align: center;margin: 0 auto;">
+    <img src="../../assets/logo1.png" style="width: 25%; text-align: center;margin: 0 auto;" />
+  </ion-row>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title class="negrito ion-text-center">{{evento.nome}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <img class="imagem" [src]="getImagem(evento.imagem)" />
+      <ion-row class="ion-margin">
+        <ion-icon name="pin"></ion-icon>
+        <p>
+          {{evento.local.bairro.cidade.nome}} - {{evento.local.bairro.nome}}
+        </p>
+        <p>
+          {{evento.local.tipoLogradouro}} {{evento.local.logradouro}} ,
+          {{evento.local.numero}}
+        </p>
+      </ion-row>
+      <ion-row class="ion-margin">
+        <ion-icon name="time-outline"></ion-icon> {{evento.data | date: 'dd/MM/yyyy HH:mm' }}
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title text-center class="negrito">Descrição do Evento</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row class="ion-margin">
+        <div [innerHTML]="evento.descricao"></div>
+      </ion-row>
+      <a class="btn btn-default color-primary" href="{{evento.urlEvento}}" target="_blank"> Página do Evento</a>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title text-center class="negrito">Local</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row class="negrito">{{evento.local.nome}}</ion-row>
+      <ion-row class="ion-margin">
+        <p>
+          {{evento.local.bairro.cidade.nome}} - {{evento.local.bairro.nome}}
+        </p>
+        <p>
+          {{evento.local.tipoLogradouro}} {{evento.local.logradouro}} ,
+          {{evento.local.numero}}
+        </p>
+      </ion-row>
+      <ion-button color="secondary" slot="end" size="small">Como Chegar</ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

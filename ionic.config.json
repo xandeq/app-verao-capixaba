@@ -1,0 +1,7 @@
+{
+  "name": "Verão Capixaba",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
