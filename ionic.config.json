@@ -1,7 +1,8 @@
 {
   "name": "Verão Capixaba",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   },
   "type": "angular"
 }

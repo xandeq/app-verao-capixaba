@@ -41,7 +41,9 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col><img [src]="getImagem(evento.imagem)" class="image-size" /></ion-col>
+        <ion-col
+          ><img [src]="getImagem(evento.imagem)" class="image-size"
+        /></ion-col>
         <ion-col>
           <ion-card-subtitle class="data"
             >{{evento.data | date: 'dd/MM/yyyy HH:mm' }}</ion-card-subtitle
@@ -54,7 +56,7 @@
             routerLink="/eventosdetalhes/{{evento.id}}"
             routerDirection="forward"
           >
-          <ion-icon name="add-outline"></ion-icon> Saiba Mais
+            <ion-icon name="add-outline"></ion-icon> Saiba Mais
           </ion-button>
           <ion-icon name="heart-outline"></ion-icon>
         </ion-col>
