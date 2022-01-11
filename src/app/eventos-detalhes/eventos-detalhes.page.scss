@@ -27,9 +27,19 @@
   text-align: center;
 }
 
+.endereco {
+  font-size: 12px;
+  font-weight: bolder;
+  display: block;
+  clear: both;
+  color: black;
+  border-bottom: solid 1px #F5F5F5;
+  text-transform: capitalize;
+  text-align: center;
+}
+
 ion-card-title {
   font-weight: 700;
   font-size: 16px;
   text-transform: uppercase;
 }
-

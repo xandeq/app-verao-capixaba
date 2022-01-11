@@ -30,7 +30,6 @@ export class Tab1Page {
     return await this.loadingCtrl
       .create({
         message: 'Por favor aguarde...',
-        duration: 3000,
         translucent: true,
       })
       .then((res) => {

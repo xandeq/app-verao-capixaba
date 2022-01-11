@@ -3,6 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy, RouterModule } from '@angular/router';
+import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -11,8 +12,6 @@ import { EventosPorBairroPage } from './eventos-por-bairro/eventos-por-bairro.pa
 import { LocaisEventosPage } from './locais-eventos/locais-eventos.page';
 import { Tab1Page } from './tab1/tab1.page';
 import { TabsPageModule } from './tabs/tabs.module';
-
-
 
 @NgModule({
   declarations: [AppComponent, LocaisEventosPage, EventosDetalhesPage, EventosPorBairroPage],
@@ -32,7 +31,7 @@ import { TabsPageModule } from './tabs/tabs.module';
     HttpClientModule,
     CommonModule,
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, DatePipe],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, DatePipe, SocialSharing],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

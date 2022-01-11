@@ -1,11 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-    <ion-button [href]="'tabs'" size="small">
-      <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
-    </ion-button>
-    Evento: <b>{{evento.nome}}</b>
-  </ion-title>
+      <ion-button [href]="'tabs'" size="small">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+      Evento: <b>{{evento.nome}}</b>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content [fullscreen]="true">
@@ -14,44 +14,86 @@
       <ion-title size="large" class="negrito">{{evento.nome}}</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-row style="text-align: center;margin: 0 auto;">
-    <img src="../../assets/logo1.png" style="width: 25%; text-align: center;margin: 0 auto;" />
+  <ion-row style="text-align: center; margin: 0 auto">
+    <img
+      src="../../assets/logo1.png"
+      style="width: 25%; text-align: center; margin: 0 auto"
+    />
   </ion-row>
   <ion-card>
     <ion-card-header>
-      <ion-card-title class="negrito ion-text-center">{{evento.nome}}</ion-card-title>
+      <ion-card-title class="negrito ion-text-center"
+        >{{evento.nome}}</ion-card-title
+      >
     </ion-card-header>
     <ion-card-content>
       <img class="imagem" [src]="getImagem(evento.imagem)" />
       <ion-row class="ion-margin">
-        <ion-icon name="pin"></ion-icon>
         <p>
+          <ion-icon name="pin"></ion-icon>
           {{evento.local.bairro.cidade.nome}} - {{evento.local.bairro.nome}}
         </p>
-        <p>
+        <p class="endereco">
+          <ion-icon name="navigate-outline"></ion-icon>
           {{evento.local.tipoLogradouro}} {{evento.local.logradouro}} ,
           {{evento.local.numero}}
         </p>
       </ion-row>
-      <ion-row class="ion-margin">
-        <ion-icon name="time-outline"></ion-icon> {{evento.data | date: 'dd/MM/yyyy HH:mm' }}
+      <ion-row class="ion-margin data">
+        <ion-icon name="time-outline"></ion-icon> {{evento.data | date:
+        'dd/MM/yyyy HH:mm' }}
       </ion-row>
     </ion-card-content>
   </ion-card>
   <ion-card>
     <ion-card-header>
-      <ion-card-title text-center class="negrito">Descrição do Evento</ion-card-title>
+      <ion-card-title text-center class="negrito"
+        >Descrição do Evento</ion-card-title
+      >
     </ion-card-header>
     <ion-card-content>
       <ion-row class="ion-margin">
         <div [innerHTML]="evento.descricao"></div>
       </ion-row>
-      <a class="btn btn-default color-primary" href="{{evento.urlEvento}}" target="_blank"> Página do Evento</a>
+      <a
+        class="btn btn-default color-primary"
+        href="{{evento.urlEvento}}"
+        target="_blank"
+      >
+        Página Oficial do Evento</a
+      >
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header class="negrito ion-text-center">
+      Compartilhar
+    </ion-card-header>
+    <ion-card-content class="ion-text-center">
+      <ion-button (click)="compartilhar('facebook', evento)">
+        <ion-icon name="logo-facebook"></ion-icon>
+      </ion-button>
+      <ion-button (click)="compartilhar('instagram', evento)">
+        <ion-icon name="logo-instagram"></ion-icon>
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header class="negrito ion-text-center"> Curtir </ion-card-header>
+    <ion-card-content class="ion-text-center">
+      <ion-button (click)="like(evento.id)" class="btn-white" *ngIf="showUnLike"
+        ><ion-icon class="btn-white" name="heart-outline"></ion-icon
+      ></ion-button>
+      <ion-button (click)="unlike(evento.id)" class="btn-white" *ngIf="showLike"
+        ><ion-icon class="btn-white" name="heart-circle-outline"></ion-icon
+      ></ion-button>
     </ion-card-content>
   </ion-card>
   <ion-card>
     <ion-card-header>
-      <ion-card-title text-center class="negrito">Local</ion-card-title>
+      <ion-card-title text-center class="negrito"
+        >Local do Evento</ion-card-title
+      >
     </ion-card-header>
     <ion-card-content>
       <ion-row class="negrito">{{evento.local.nome}}</ion-row>
@@ -64,7 +106,22 @@
           {{evento.local.numero}}
         </p>
       </ion-row>
-      <ion-button color="secondary" slot="end" size="small">Como Chegar</ion-button>
+
+      <!-- <ion-button color="secondary" slot="end" size="small">Como Chegar</ion-button> -->
+      <ion-row class="ion-text-center">
+        <ion-icon name="navigate-circle-outline"></ion-icon>
+        <a
+          class="btn btn-info"
+          target="_blank"
+          href="https://maps.google.com/?q={{evento.local.latitude}},{{evento.local.longitude}}"
+          >Como Chegar</a
+        >
+        <div class="map-wrapper">
+          <div id="map_center">
+            <!-- <img src="assets/icon/location-marker.png" /> -->
+          </div>
+        </div>
+      </ion-row>
     </ion-card-content>
   </ion-card>
 </ion-content>

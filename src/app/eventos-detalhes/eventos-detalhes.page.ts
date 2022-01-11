@@ -1,7 +1,7 @@
 import { ILocal } from './../../interfaces/local';
 import { EventosService } from 'src/services/eventos.service';
 import { IEvento } from './../../interfaces/eventos';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
   ActivatedRoute,
   Router,
@@ -9,6 +9,9 @@ import {
   NavigationExtras,
 } from '@angular/router';
 import { LoadingController, NavController } from '@ionic/angular';
+import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
+import { ToastController } from '@ionic/angular';
+import { SessionService } from './../../services/session.service';
 
 @Component({
   selector: 'app-eventos-detalhes',
@@ -16,11 +19,12 @@ import { LoadingController, NavController } from '@ionic/angular';
   styleUrls: ['./eventos-detalhes.page.scss'],
 })
 export class EventosDetalhesPage implements OnInit {
+  @ViewChild('map', { static: false }) mapView: ElementRef;
+
   evento: IEvento = {
     id: 17,
     nome: 'GUSTTAVO LIMA',
-    descricao:
-      '<div class="presentations__Wrapper-sc-13vh2u7-0 pfHxi" style="box-sizing: border-box; border: 0px solid #e2e8f0; display: grid; row-gap: 20px; font-family: \'Open Sans\', sans-serif; background-color: #f9f9f9;">\r\n<div class="presentation__Wrapper-b05ml8-0 LmevU" style="box-sizing: border-box; border: 1px solid #d8d8d8; display: grid; grid-template-columns: 1fr; background: #ffffff;">\r\n<div class="presentation__Content-b05ml8-14 kLrBQX" style="box-sizing: border-box; border: 0px solid #e2e8f0; font-size: 0.8125rem; padding: 0px 22px 20px;">\r\n<div style="box-sizing: border-box; border: 0px solid #e2e8f0;">\r\n<div class="info items-center" style="box-sizing: border-box; border: 1px solid #5ebfb7; -webkit-box-align: center; align-items: center; display: flex; font-size: 0.8125rem; padding: 15px; background-color: #66ceaf;">\r\n<div style="box-sizing: border-box; border: 0px solid #e2e8f0;">\r\n<p style="box-sizing: border-box; border: 0px solid #e2e8f0; margin: 0px; word-break: break-word;">HORARIO ABERTURA: 15:00 hras</p>\r\n</div>\r\n</div>\r\n<br style="box-sizing: border-box; border: 0px solid #e2e8f0;" />\r\n<div class="success" style="box-sizing: border-box; border: 1px solid #72dd9d; -webkit-box-align: center; align-items: center; display: flex; font-size: 0.8125rem; padding: 15px; background-color: #b8f4d0;">\r\n<div style="box-sizing: border-box; border: 0px solid #e2e8f0;">\r\n<p style="box-sizing: border-box; border: 0px solid #e2e8f0; margin: 0px; word-break: break-word;">CLASSIFICA&Ccedil;&Atilde;O ET&Aacute;RIA: 18 Anos</p>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n</div>\r\n<div class="slug__ContentContainer-uuh74y-3 dqHTOb" style="box-sizing: border-box; border: 0px solid #e2e8f0; font-family: \'Open Sans\', sans-serif; background-color: #f9f9f9;">\r\n<div class="slug__Content-uuh74y-5 eKRqgf" style="box-sizing: border-box; border: 0px solid #e2e8f0; font-size: 0.8125rem; padding: 20px; background-color: #ffffff;">\r\n<h1 style="box-sizing: border-box; border: 0px solid #e2e8f0; font-size: 1.25rem; margin: 0px 0px 20px; word-break: break-word;" role="heading" aria-label="De inventor dos amores a Embaixador"><span style="box-sizing: border-box; border: 0px solid #e2e8f0; word-break: break-word;">De inventor dos amores a Embaixador</span></h1>\r\n<p style="box-sizing: border-box; border: 0px solid #e2e8f0; margin: 0px 0px 0.8125rem; word-break: break-word;">Cantor, m&uacute;sico, compositor e autodidata, Gusttavo Lima inicia sua carreira em Presidente Oleg&aacute;rio no interior de Minas e conquista o Brasil, se tornando um dos artistas de maior notoriedade nacional.</p>\r\n</div>\r\n</div>',
+    descricao: '<div class="presentations>\r\n</div>',
     imagem: 'images\\eventos\\7d2cfa52-1b76-416a-9079-48d0c7323543.jpg',
     data: new Date(),
     urlEvento: 'https://www.brasilticket.com.br/gusttavo-lima-guarapari',
@@ -52,22 +56,29 @@ export class EventosDetalhesPage implements OnInit {
   eventoID: number;
   listaEventos: IEvento[];
 
+  showLike = false;
+  showUnLike = true;
+
   constructor(
     private route: ActivatedRoute,
     private eventosService: EventosService,
     private navCtrl: NavController,
-    public loadingCtrl: LoadingController
-  ) {
-    // this.evento.local = ;
-    // this.evento.local.bairro.cidade.nome = '-';
-    // this.evento.local.bairro.nome = '-';
+    public loadingCtrl: LoadingController,
+    private socialSharing: SocialSharing,
+    public toastController: ToastController,
+    private session:SessionService
+  ) {}
+
+  ngOnInit() {
+    this.obterTodosEventos();
+    this.eventoID = Number(this.route.snapshot.paramMap.get('id'));
   }
 
   basicLoader() {
     this.loadingCtrl
       .create({
         message: 'Por favor aguarde...',
-        duration: 3000,
+        duration: 2000,
         translucent: true,
       })
       .then((res) => {
@@ -100,22 +111,18 @@ export class EventosDetalhesPage implements OnInit {
       });
   }
 
-  ngOnInit() {
-    this.obterTodosEventos();
-    this.eventoID = Number(this.route.snapshot.paramMap.get('id'));
-  }
-
   obterTodosEventos() {
     this.basicLoader();
     this.eventosService.obterTodosEventos().subscribe({
       next: (data: IEvento[]) => {
         console.log(data);
         this.listaEventos = data;
+        this.closeLoader();
         this.evento = this.listaEventos.find(
           (item) => item.id === this.eventoID
         );
         console.log(this.evento);
-        this.closeLoader();
+        //this.initMap(this.evento.local.latitude, this.evento.local.longitude);
       },
       error: (err: any) => {
         this.closeLoader();
@@ -130,5 +137,52 @@ export class EventosDetalhesPage implements OnInit {
 
   abrirPaginaExterna(url: string) {
     window.open(url);
+  }
+
+  compartilhar(opcao, evento) {
+    switch (opcao) {
+      case 'facebook':
+        this.socialSharing
+          .shareViaFacebook(evento.nome, this.getImagem(evento.imagem), '')
+          .then(() => {
+            this.presentToast('Compartilhado no Facebook com sucesso!');
+          })
+          .catch((err) => {
+            this.presentToast(err);
+          });
+        break;
+      case 'instagram':
+        this.socialSharing
+          .shareViaInstagram(evento.nome, this.getImagem(evento.imagem))
+          .then(() => {
+            this.presentToast('Compartilhado no Instagram com sucesso!');
+          })
+          .catch((err) => {
+            this.presentToast(err);
+          });
+        break;
+      default:
+        break;
+    }
+  }
+
+  async presentToast(mensagem) {
+    const toast = await this.toastController.create({
+      message: mensagem,
+      duration: 2000,
+    });
+    toast.present();
+  }
+
+  like(id) {
+    this.showLike = true;
+    this.showUnLike = false;
+    this.session.setSession(id);
+  }
+
+  unlike(id) {
+    this.showLike = false;
+    this.showUnLike = true;
+    this.session.updateItemSession(id);
   }
 }
